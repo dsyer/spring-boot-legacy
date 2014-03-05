@@ -22,9 +22,9 @@ import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfiguration;
@@ -53,7 +53,7 @@ import org.springframework.web.util.UrlPathHelper;
 @Configuration
 @ConditionalOnBean({ CounterService.class, GaugeService.class })
 @ConditionalOnClass({ Servlet.class })
-@ConditionalOnMissingClass(name="javax.servlet.ServletRegistration")
+@ConditionalOnMissingClass(name = "javax.servlet.ServletRegistration")
 @AutoConfigureAfter(MetricRepositoryAutoConfiguration.class)
 public class MetricFilterAutoConfiguration {
 
@@ -84,24 +84,23 @@ public class MetricFilterAutoConfiguration {
 			String suffix = helper.getPathWithinApplication(request);
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
+			MetricsFilterResponseWrapper wrapper = new MetricsFilterResponseWrapper(response);
 			try {
-				chain.doFilter(request, response);
-			}
-			finally {
+				chain.doFilter(request, wrapper);
+			} finally {
 				stopWatch.stop();
 				String gaugeKey = getKey("response" + suffix);
 				MetricFilterAutoConfiguration.this.gaugeService.submit(gaugeKey,
 						stopWatch.getTotalTimeMillis());
-				String counterKey = getKey("status." + getStatus(response) + suffix);
+				String counterKey = getKey("status." + getStatus(wrapper) + suffix);
 				MetricFilterAutoConfiguration.this.counterService.increment(counterKey);
 			}
 		}
 
-		private int getStatus(HttpServletResponse response) {
+		private int getStatus(MetricsFilterResponseWrapper response) {
 			try {
 				return response.getStatus();
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				return UNDEFINED_HTTP_STATUS;
 			}
 		}
@@ -117,6 +116,30 @@ public class MetricFilterAutoConfiguration {
 				value = value.substring(1);
 			}
 			return value;
+		}
+	}
+
+	private class MetricsFilterResponseWrapper extends HttpServletResponseWrapper {
+
+		private int status;
+		
+		public MetricsFilterResponseWrapper(HttpServletResponse response) {
+			super(response);
+		}
+		
+		public int getStatus() {
+			return status;
+		}
+
+		@Override
+		public void setStatus(int sc) {
+			setStatus(sc, null);
+		}
+
+		@Override
+		public void setStatus(int status, String sm) {
+			this.status = status;
+			super.setStatus(status, sm);
 		}
 	}
 
