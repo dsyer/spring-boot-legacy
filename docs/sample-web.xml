@@ -2,20 +2,25 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	
+
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>demo.Application</param-value>
 	</context-param>
 
-	<context-param>
-		<param-name>contextClass</param-name>
-		<param-value>org.springframework.boot.legacy.context.web.AnnotationConfigNonEmbeddedWebApplicationContext</param-value>
-	</context-param>
-
 	<listener>
 		<listener-class>org.springframework.boot.legacy.context.web.SpringBootContextLoaderListener</listener-class>
 	</listener>
+
+	<filter>
+		<filter-name>metricFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>metricFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<servlet>
 		<servlet-name>appServlet</servlet-name>

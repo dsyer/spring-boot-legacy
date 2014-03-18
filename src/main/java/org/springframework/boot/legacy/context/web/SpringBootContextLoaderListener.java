@@ -18,14 +18,22 @@ package org.springframework.boot.legacy.context.web;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContextException;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 /**
+ * A {@link ContextLoaderListener} that uses {@link SpringApplication} to initialize an
+ * application context. Allows Servlet 2.5 applications (with web.xml) to advantage of all
+ * the initialization extras in Spring Boot even if they don't use an embedded container.
+ * 
  * @author Dave Syer
  */
 public class SpringBootContextLoaderListener extends ContextLoaderListener {
@@ -43,15 +51,31 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		@SuppressWarnings("unchecked")
 		Class<? extends ConfigurableApplicationContext> contextClass = (Class<? extends ConfigurableApplicationContext>) determineContextClass(servletContext);
 		builder.contextClass(contextClass);
-		builder.initializers(new ApplicationContextInitializer<NonEmbeddedWebApplicationContext>() {
+		builder.initializers(new ApplicationContextInitializer<GenericWebApplicationContext>() {
 			@Override
-			public void initialize(NonEmbeddedWebApplicationContext applicationContext) {
+			public void initialize(GenericWebApplicationContext applicationContext) {
 				applicationContext.setServletContext(servletContext);
 			}
 		});
 		WebApplicationContext context = (WebApplicationContext) builder.run();
-		servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
+		servletContext.setAttribute(
+				WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
 		return context;
+	}
+
+	@Override
+	protected Class<?> determineContextClass(ServletContext servletContext) {
+		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
+		if (contextClassName != null) {
+			try {
+				return ClassUtils.forName(contextClassName, null);
+			} catch (Exception e) {
+				throw new ApplicationContextException(
+						"Failed to load custom context class [" + contextClassName + "]",
+						e);
+			}
+		}
+		return AnnotationConfigNonEmbeddedWebApplicationContext.class;
 	}
 
 }
