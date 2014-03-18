@@ -49,7 +49,9 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 				applicationContext.setServletContext(servletContext);
 			}
 		});
-		return (WebApplicationContext) builder.run();
+		WebApplicationContext context = (WebApplicationContext) builder.run();
+		servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
+		return context;
 	}
 
 }
