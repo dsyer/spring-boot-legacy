@@ -22,6 +22,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.boot.context.embedded.WebApplicationContextServletContextAwareProcessor;
 import org.springframework.context.ApplicationContextException;
@@ -36,6 +37,9 @@ import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
+ * A version of the {@link EmbeddedWebApplicationContext} that can be used with a
+ * SpringApplication in a web (i.e. servlet) context but does not require an embedded
+ * servlet container.
  */
 public class NonEmbeddedWebApplicationContext extends GenericWebApplicationContext {
 

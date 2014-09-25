@@ -43,6 +43,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
  * to deliberately override certain bean definitions via an extra Configuration class.
  * 
  * @author Phillip Webb
+ * @Author Dave Syer
  * @see #register(Class...)
  * @see #scan(String...)
  * @see EmbeddedWebApplicationContext

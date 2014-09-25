@@ -31,8 +31,9 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
 
 /**
  * A {@link ContextLoaderListener} that uses {@link SpringApplication} to initialize an
- * application context. Allows Servlet 2.5 applications (with web.xml) to advantage of all
- * the initialization extras in Spring Boot even if they don't use an embedded container.
+ * application context. Allows Servlet 2.5 applications (with web.xml) to take advantage
+ * of all the initialization extras in Spring Boot even if they don't use an embedded
+ * container.
  * 
  * @author Dave Syer
  */
@@ -69,7 +70,8 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		if (contextClassName != null) {
 			try {
 				return ClassUtils.forName(contextClassName, null);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new ApplicationContextException(
 						"Failed to load custom context class [" + contextClassName + "]",
 						e);
