@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>spring-boot-legacy</artifactId>
-	<version>1.0.0.M2</version>
+	<version>1.0.0.RELEASE</version>
 
 	<name>spring-boot-legacy</name>
 	<description>Spring Boot Servlet 2.5 support</description>
@@ -51,43 +51,6 @@
 		<tomcat.version>6.0.36</tomcat.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>http://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>http://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>http://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>http://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
-
 	<url>http://spring.io</url>
 	<organization>
 		<name>Pivotal</name>
@@ -106,6 +69,27 @@
 		<developerConnection>scm:git:ssh://git@github.com/scratches/spring-boot-legacy.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+
+	<distributionManagement>
+
+		<site>
+			<id>static.springframework.org</id>
+			<url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-boot-legacy</url>
+		</site>
+
+		<repository>
+			<id>repo.spring.io</id>
+			<name>Spring Release Repository</name>
+			<url>http://repo.spring.io/libs-release-local</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>repo.spring.io</id>
+			<name>Spring Snapshot Repository</name>
+			<url>http://repo.spring.io/libs-snapshot-local</url>
+		</snapshotRepository>
+
+	</distributionManagement>
 
 	<developers>
 		<developer>
@@ -136,40 +120,40 @@
 
 	<profiles>
 		<profile>
-			<id>integration</id>
+			<id>milestone</id>
+			<distributionManagement>
+				<repository>
+					<id>repo.spring.io</id>
+					<name>Spring Milestone Repository</name>
+					<url>http://repo.spring.io/libs-milestone-local</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>central</id>
+			<distributionManagement>
+				<snapshotRepository>
+					<id>sonatype-nexus-snapshots</id>
+					<name>Sonatype Nexus Snapshots</name>
+					<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+				</snapshotRepository>
+				<repository>
+					<id>sonatype-nexus-staging</id>
+					<name>Nexus Release Repository</name>
+					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+				</repository>
+			</distributionManagement>
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
+						<artifactId>maven-gpg-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>surefire-it</id>
-								<phase>integration-test</phase>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
 								<goals>
-									<goal>test</goal>
+									<goal>sign</goal>
 								</goals>
-								<configuration>
-									<skip>${skipTests}</skip>
-									<testFailureIgnore>false</testFailureIgnore>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.tomcat.maven</groupId>
-						<artifactId>tomcat6-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>start-tomcat</id>
-								<phase>pre-integration-test</phase>
-								<goals>
-									<goal>run</goal>
-								</goals>
-								<configuration>
-									<path>/</path>
-									<fork>true</fork>
-								</configuration>
 							</execution>
 						</executions>
 					</plugin>

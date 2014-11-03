@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-legacy</artifactId>
-			<version>1.0.0.M2</version>
+			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>net.kindleit</groupId>
@@ -84,6 +84,17 @@
 	</properties>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -165,7 +176,9 @@
 								</goals>
 								<configuration>
 									<skip>${skipTests}</skip>
-									<includes><include>**/NonEmbedded*Tests.java</include></includes>
+									<includes>
+										<include>**/NonEmbedded*Tests.java</include>
+									</includes>
 								</configuration>
 							</execution>
 						</executions>
