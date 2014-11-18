@@ -31,6 +31,7 @@ import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfig
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.boot.actuate.metrics.GaugeService;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -54,9 +55,11 @@ import org.springframework.web.util.UrlPathHelper;
  */
 @Configuration
 @ConditionalOnBean({ CounterService.class, GaugeService.class })
-@ConditionalOnClass({ Servlet.class })
+@ConditionalOnClass({ Servlet.class, MetricRepositoryAutoConfiguration.class })
 @ConditionalOnMissingClass(name = "javax.servlet.ServletRegistration")
-@AutoConfigureAfter(MetricRepositoryAutoConfiguration.class)
+@AutoConfigureAfter({
+		MetricRepositoryAutoConfiguration.class,
+		org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration.class })
 public class MetricFilterAutoConfiguration {
 
 	private static final int UNDEFINED_HTTP_STATUS = 999;
@@ -88,10 +91,12 @@ public class MetricFilterAutoConfiguration {
 			String suffix = helper.getPathWithinApplication(request);
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
-			MetricsFilterResponseWrapper wrapper = new MetricsFilterResponseWrapper(response);
+			MetricsFilterResponseWrapper wrapper = new MetricsFilterResponseWrapper(
+					response);
 			try {
 				chain.doFilter(request, wrapper);
-			} finally {
+			}
+			finally {
 				stopWatch.stop();
 				int status = getStatus(wrapper);
 				Object bestMatchingPattern = request
@@ -113,7 +118,8 @@ public class MetricFilterAutoConfiguration {
 		private int getStatus(MetricsFilterResponseWrapper response) {
 			try {
 				return response.getStatus();
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				return UNDEFINED_HTTP_STATUS;
 			}
 		}
@@ -135,11 +141,11 @@ public class MetricFilterAutoConfiguration {
 	private class MetricsFilterResponseWrapper extends HttpServletResponseWrapper {
 
 		private int status;
-		
+
 		public MetricsFilterResponseWrapper(HttpServletResponse response) {
 			super(response);
 		}
-		
+
 		public int getStatus() {
 			return status;
 		}
