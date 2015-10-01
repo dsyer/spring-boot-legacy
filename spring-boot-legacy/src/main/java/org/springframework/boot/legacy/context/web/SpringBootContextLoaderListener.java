@@ -27,7 +27,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 
 /**
  * A {@link ContextLoaderListener} that uses {@link SpringApplication} to initialize an
@@ -52,9 +52,9 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		@SuppressWarnings("unchecked")
 		Class<? extends ConfigurableApplicationContext> contextClass = (Class<? extends ConfigurableApplicationContext>) determineContextClass(servletContext);
 		builder.contextClass(contextClass);
-		builder.initializers(new ApplicationContextInitializer<GenericWebApplicationContext>() {
+		builder.initializers(new ApplicationContextInitializer<ConfigurableWebApplicationContext>() {
 			@Override
-			public void initialize(GenericWebApplicationContext applicationContext) {
+			public void initialize(ConfigurableWebApplicationContext applicationContext) {
 				applicationContext.setServletContext(servletContext);
 			}
 		});
