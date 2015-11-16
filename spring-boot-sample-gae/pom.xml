@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.2.0.BUILD-SNAPSHOT</version>
+		<version>1.2.7.RELEASE</version>
 	</parent>
 
 	<dependencies>
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-legacy</artifactId>
-			<version>1.0.1.RELEASE</version>
+			<version>1.0.2.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>net.kindleit</groupId>
@@ -101,22 +101,14 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>net.kindleit</groupId>
-				<artifactId>maven-gae-plugin</artifactId>
-				<version>0.9.6</version>
-				<dependencies>
-					<dependency>
-						<groupId>net.kindleit</groupId>
-						<artifactId>gae-runtime</artifactId>
-						<version>${gae.version}</version>
-						<type>pom</type>
-					</dependency>
-				</dependencies>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+				<version>1.9.28</version>
 			</plugin>
 			<plugin>
 				<artifactId>maven-release-plugin</artifactId>
 				<configuration>
-					<goals>gae:deploy</goals>
+					<goals>appengine:update</goals>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -131,35 +123,6 @@
 	</build>
 
 	<profiles>
-		<!-- We can configure our integration server to activate this profile and 
-			perform gae:deploy, thus uploading latest snapshot to the http://1.latest.<applicationName>.appspot.com 
-			automatically -->
-		<profile>
-			<id>integration-build</id>
-			<properties>
-				<gae.application.version>stage</gae.application.version>
-			</properties>
-		</profile>
-
-		<!-- This profile will activate automatically during release and upload 
-			application to the http://2.latest.<applicationName>.appspot.com (We might 
-			want to set the 2nd version as our applications Default version to be accessible 
-			at http://<applicationName>.appspot.com) -->
-		<profile>
-			<id>release-build</id>
-			<activation>
-				<property>
-					<name>performRelease</name>
-					<value>true</value>
-				</property>
-			</activation>
-
-			<properties>
-				<!-- During release, set application version in appengine-web.xml to 
-					2 -->
-				<gae.application.version>release</gae.application.version>
-			</properties>
-		</profile>
 		<profile>
 			<id>integration</id>
 			<build>
