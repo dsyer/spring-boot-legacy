@@ -32,25 +32,25 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 /**
  * {@link EmbeddedWebApplicationContext} that accepts annotated classes as input - in
  * particular {@link org.springframework.context.annotation.Configuration
- * <code>@Configuration</code>}-annotated classes, but also plain
- * {@link org.springframework.stereotype.Component <code>@Component</code>} classes and
- * JSR-330 compliant classes using {@code javax.inject} annotations. Allows for
- * registering classes one by one (specifying class names as config location) as well as
- * for classpath scanning (specifying base packages as config location).
+ * &#64;Configuration}-annotated classes, but also plain
+ * {@link org.springframework.stereotype.Component &#64;Component} classes and JSR-330
+ * compliant classes using {@code javax.inject} annotations. Allows for registering
+ * classes one by one (specifying class names as config location) as well as for classpath
+ * scanning (specifying base packages as config location).
  * <p>
  * Note: In case of multiple {@code @Configuration} classes, later {@code @Bean}
  * definitions will override ones defined in earlier loaded files. This can be leveraged
  * to deliberately override certain bean definitions via an extra Configuration class.
  * 
  * @author Phillip Webb
- * @Author Dave Syer
+ * @author Dave Syer
  * @see #register(Class...)
  * @see #scan(String...)
  * @see EmbeddedWebApplicationContext
  * @see AnnotationConfigWebApplicationContext
  */
-public class AnnotationConfigNonEmbeddedWebApplicationContext extends
-		NonEmbeddedWebApplicationContext {
+public class AnnotationConfigNonEmbeddedWebApplicationContext
+		extends NonEmbeddedWebApplicationContext {
 
 	private final AnnotatedBeanDefinitionReader reader;
 
@@ -62,8 +62,8 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends
 
 	/**
 	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext} that needs to
-	 * be populated through {@link #register} calls and then manually
-	 * {@linkplain #refresh refreshed}.
+	 * be populated through {@link #register} calls and then manually {@linkplain #refresh
+	 * refreshed}.
 	 */
 	public AnnotationConfigNonEmbeddedWebApplicationContext() {
 		this.reader = new AnnotatedBeanDefinitionReader(this);
@@ -75,9 +75,10 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends
 	 * bean definitions from the given annotated classes and automatically refreshing the
 	 * context.
 	 * @param annotatedClasses one or more annotated classes, e.g. {@link Configuration
-	 * <code>@Configuration</code>} classes
+	 * &#64;Configuration} classes
 	 */
-	public AnnotationConfigNonEmbeddedWebApplicationContext(Class<?>... annotatedClasses) {
+	public AnnotationConfigNonEmbeddedWebApplicationContext(
+			Class<?>... annotatedClasses) {
 		this();
 		register(annotatedClasses);
 		refresh();
@@ -117,6 +118,9 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends
 	 * <p>
 	 * Any call to this method must occur prior to calls to {@link #register(Class...)}
 	 * and/or {@link #scan(String...)}.
+	 * 
+	 * @param beanNameGenerator the BeanNameGenerator to set
+	 * 
 	 * @see AnnotatedBeanDefinitionReader#setBeanNameGenerator
 	 * @see ClassPathBeanDefinitionScanner#setBeanNameGenerator
 	 */
@@ -135,6 +139,8 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends
 	 * <p>
 	 * Any call to this method must occur prior to calls to {@link #register(Class...)}
 	 * and/or {@link #scan(String...)}.
+	 * 
+	 * @param scopeMetadataResolver the ScopeMetadataResolver to set
 	 */
 	public void setScopeMetadataResolver(ScopeMetadataResolver scopeMetadataResolver) {
 		this.reader.setScopeMetadataResolver(scopeMetadataResolver);
@@ -149,7 +155,7 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends
 	 * Calls to {@link #register} are idempotent; adding the same annotated class more
 	 * than once has no additional effect.
 	 * @param annotatedClasses one or more annotated classes, e.g. {@link Configuration
-	 * <code>@Configuration</code>} classes
+	 * &#64;Configuration} classes
 	 * @see #scan(String...)
 	 * @see #refresh()
 	 */
