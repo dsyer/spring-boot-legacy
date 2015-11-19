@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>spring-boot-sample-gae</artifactId>
+	<artifactId>spring-boot-sample-secure-legacy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>spring-boot-sample-gae</name>
+	<name>spring-boot-sample-secure-legacy</name>
 	<description>Demo project</description>
 
 	<parent>
@@ -27,6 +27,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
@@ -38,24 +42,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-labs</artifactId>
-			<version>${gae.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-stubs</artifactId>
-			<version>${gae.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-testing</artifactId>
-			<version>${gae.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -71,7 +57,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
-		<gae.version>1.9.28</gae.version>
 	</properties>
 
 	<build>
@@ -90,17 +75,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.google.appengine</groupId>
-				<artifactId>appengine-maven-plugin</artifactId>
-				<version>${gae.version}</version>
-			</plugin>
-			<plugin>
-				<artifactId>maven-release-plugin</artifactId>
-				<configuration>
-					<goals>appengine:update</goals>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
