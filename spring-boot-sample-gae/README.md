@@ -10,3 +10,4 @@ $ mvn appengine:deploy
 ```
 
 Also runs as a deployed WAR in WTP or regular Tomcat container. The `main()` app (normal Spring Boot launcher) should also work.
+

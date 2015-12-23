@@ -15,16 +15,18 @@
  */
 package org.springframework.boot.legacy.context.web;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.util.Collections;
 
 import javax.servlet.ServletContext;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Dave Syer
@@ -50,5 +52,41 @@ public class SpringBootContextLoaderListenerTests {
 	protected static class TestConfiguration {
 
 	}
+
+    @Test
+    public void testNoProfile() {
+        Mockito.when(servletContext.getInitParameterNames()).thenReturn(
+                Collections.emptyEnumeration());
+        Mockito.when(servletContext.getAttributeNames()).thenReturn(
+                Collections.emptyEnumeration());
+        Mockito.when(servletContext.getInitParameter(ContextLoader.CONFIG_LOCATION_PARAM))
+                .thenReturn(TestConfiguration.class.getName());
+        SpringBootContextLoaderListener listener = new SpringBootContextLoaderListener();
+        WebApplicationContext webApplicationContext = listener.initWebApplicationContext(servletContext);
+        assertEquals(webApplicationContext.getEnvironment().getActiveProfiles().length, 0);
+    }
+
+    public static class CustomSpringBootContextLoaderListener extends SpringBootContextLoaderListener {
+        @Override
+        protected void configureSpringApplicationBuilder(SpringApplicationBuilder builder) {
+            builder.profiles("uat");
+        }
+    }
+
+    @Test
+    public void testAddsProfile() {
+        Mockito.when(servletContext.getInitParameterNames()).thenReturn(
+                Collections.emptyEnumeration());
+        Mockito.when(servletContext.getAttributeNames()).thenReturn(
+                Collections.emptyEnumeration());
+        Mockito.when(servletContext.getInitParameter(ContextLoader.CONFIG_LOCATION_PARAM))
+                .thenReturn(TestConfiguration.class.getName());
+        SpringBootContextLoaderListener listener = new CustomSpringBootContextLoaderListener();
+        WebApplicationContext webApplicationContext = listener.initWebApplicationContext(servletContext);
+        assertEquals(webApplicationContext.getEnvironment().getActiveProfiles().length, 1);
+        assertEquals(webApplicationContext.getEnvironment().getActiveProfiles()[0], "uat");
+    }
+
+
 
 }
