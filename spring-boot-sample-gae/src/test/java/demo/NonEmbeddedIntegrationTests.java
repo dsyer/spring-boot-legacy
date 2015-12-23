@@ -47,7 +47,7 @@ public class NonEmbeddedIntegrationTests {
 		String body = new TestRestTemplate().getForObject("http://localhost:" + port
 				+ "/metrics", String.class);
 		log.info("found metrics = " + body);
-		assertTrue("Wrong body: " + body, body.contains("\"classes.loaded"));
+		assertTrue("Wrong body: " + body, body.contains("\"mem.free"));
 	}
 
 }

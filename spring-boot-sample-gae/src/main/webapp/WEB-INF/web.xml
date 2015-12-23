@@ -9,7 +9,7 @@
 	</context-param>
 
 	<listener>
-		<listener-class>org.springframework.boot.legacy.context.web.SpringBootContextLoaderListener</listener-class>
+		<listener-class>demo.config.CustomSpringBootContextLoaderListener</listener-class>
 	</listener>
 
 	<filter>

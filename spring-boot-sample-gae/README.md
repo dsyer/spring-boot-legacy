@@ -6,8 +6,23 @@ Depends on [spring-boot-legacy](https://github.com/scratches/spring-boot-legacy)
 $ git clone https://github.com/scratches/spring-boot-legacy
 $ (cd spring-boot-legacy; mvn install)
 $ cd spring-boot-sample-gae
-$ mvn appengine:deploy
+$ mvn appengine:update
 ```
+
+It will be deployed to the settings in appengine-web.xml
+```  
+	<application>my-project</application>
+	<module>spring-boot-sample-gae</module>
+	<version>1</version>
+```
+
+
+Note that web.xml contains a sub-classed SpringBootContextLoaderListener which you configure
+```  
+<listener>  
+	<listener-class>demo.config.CustomSpringBootContextLoaderListener</listener-class>  
+</listener>  
+```  
 
 Also runs as a deployed WAR in WTP or regular Tomcat container. The `main()` app (normal Spring Boot launcher) should also work.
 

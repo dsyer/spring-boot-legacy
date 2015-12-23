@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-legacy</artifactId>
-			<version>1.0.3.RELEASE</version>
+			<version>1.0.4.SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -71,7 +71,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
-		<gae.version>1.9.28</gae.version>
+		<gae.version>1.9.30</gae.version>
 	</properties>
 
 	<build>
