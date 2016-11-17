@@ -31,7 +31,6 @@ import org.springframework.boot.actuate.autoconfigure.MetricRepositoryAutoConfig
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.boot.actuate.metrics.GaugeService;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -56,7 +55,7 @@ import org.springframework.web.util.UrlPathHelper;
 @Configuration
 @ConditionalOnBean({ CounterService.class, GaugeService.class })
 @ConditionalOnClass({ Servlet.class, MetricRepositoryAutoConfiguration.class })
-@ConditionalOnMissingClass(name = "javax.servlet.ServletRegistration")
+@ConditionalOnMissingClass("javax.servlet.ServletRegistration")
 @AutoConfigureAfter({
 		MetricRepositoryAutoConfiguration.class,
 		org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration.class })

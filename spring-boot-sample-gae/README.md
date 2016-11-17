@@ -4,9 +4,10 @@ Depends on [spring-boot-legacy](https://github.com/scratches/spring-boot-legacy)
 
 ```
 $ git clone https://github.com/scratches/spring-boot-legacy
-$ (cd spring-boot-legacy; mvn install)
+$ cd spring-boot-legacy
+$ mvn install
 $ cd spring-boot-sample-gae
-$ mvn appengine:deploy
+$ mvn appengine:update
 ```
 
 Also runs as a deployed WAR in WTP or regular Tomcat container. The `main()` app (normal Spring Boot launcher) should also work.

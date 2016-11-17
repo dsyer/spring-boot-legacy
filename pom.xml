@@ -5,7 +5,7 @@
 
     <groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-legacy-parent</artifactId>
-	<version>1.0.3.RELEASE</version>
+	<version>1.1.0.RELEASE</version>
     <packaging>pom</packaging>
 
 	<name>spring-boot-legacy-parent</name>
