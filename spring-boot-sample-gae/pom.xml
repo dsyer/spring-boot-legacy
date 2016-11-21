@@ -71,7 +71,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
-		<appengine.version>1.9.44</appengine.version>
+		<appengine.version>1.9.46</appengine.version>
 		<gae.version>5</gae.version>
 	</properties>
 

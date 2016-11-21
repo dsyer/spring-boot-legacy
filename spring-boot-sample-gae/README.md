@@ -11,3 +11,5 @@ $ mvn appengine:update
 ```
 
 Also runs as a deployed WAR in WTP or regular Tomcat container. The `main()` app (normal Spring Boot launcher) should also work.
+
+> NOTE: Google AppEngine does not allow JMX, so you have to switch it off in a Spring Boot app (`spring.jmx.enabled=false`).
