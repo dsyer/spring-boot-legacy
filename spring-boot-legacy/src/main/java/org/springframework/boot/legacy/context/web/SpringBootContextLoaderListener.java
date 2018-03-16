@@ -46,9 +46,19 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 			final ServletContext servletContext) {
 		String configLocationParam = servletContext
 				.getInitParameter(CONFIG_LOCATION_PARAM);
-		SpringApplicationBuilder builder = new SpringApplicationBuilder(
-				(Object[]) StringUtils.tokenizeToStringArray(configLocationParam,
-						INIT_PARAM_DELIMITERS));
+		String[] classNames = StringUtils.tokenizeToStringArray(configLocationParam, INIT_PARAM_DELIMITERS);
+
+		Class[] classes = new Class[classNames.length];
+		for (int i = 0; i < classes.length; i++) {
+			try {
+				classes[i] = ClassUtils.forName(classNames[i], null);
+			} catch (ClassNotFoundException e) {
+				throw new ApplicationContextException(
+						"Failed to load custom context class [" + classNames[i] + "]", e);
+			}
+		}
+
+		SpringApplicationBuilder builder = new SpringApplicationBuilder(classes);
 		@SuppressWarnings("unchecked")
 		Class<? extends ConfigurableApplicationContext> contextClass = (Class<? extends ConfigurableApplicationContext>) determineContextClass(servletContext);
 		builder.contextClass(contextClass);

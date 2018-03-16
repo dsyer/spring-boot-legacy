@@ -18,7 +18,6 @@ package org.springframework.boot.legacy.context.web;
 
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanNameGenerator;
-import org.springframework.boot.context.embedded.EmbeddedWebApplicationContext;
 import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.annotation.AnnotationScopeMetadataResolver;
@@ -28,9 +27,10 @@ import org.springframework.context.annotation.ScopeMetadataResolver;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.util.Assert;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 /**
- * {@link EmbeddedWebApplicationContext} that accepts annotated classes as input - in
+ * {@link GenericWebApplicationContext} that accepts annotated classes as input - in
  * particular {@link org.springframework.context.annotation.Configuration
  * &#64;Configuration}-annotated classes, but also plain
  * {@link org.springframework.stereotype.Component &#64;Component} classes and JSR-330
@@ -46,11 +46,9 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
  * @author Dave Syer
  * @see #register(Class...)
  * @see #scan(String...)
- * @see EmbeddedWebApplicationContext
  * @see AnnotationConfigWebApplicationContext
  */
-public class AnnotationConfigNonEmbeddedWebApplicationContext
-		extends NonEmbeddedWebApplicationContext {
+public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWebApplicationContext {
 
 	private final AnnotatedBeanDefinitionReader reader;
 
