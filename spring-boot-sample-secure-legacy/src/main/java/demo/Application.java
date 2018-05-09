@@ -12,23 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 @ComponentScan
 @EnableAutoConfiguration
 @RestController
-public class Application {
-	
+public class Application
+{
+	@Value("${message}")
+	private String message;
+
 	@Value("${info.version}")
 	private String version;
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
-    
-    @RequestMapping("/")
-    public String home() {
-    	return "Hello World";
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    @RequestMapping("/version")
-    public String getVersion() {
-    	return version;
-    }
+	@RequestMapping("/version")
+	public String getVersion() {
+		return version;
+	}
 
+	@RequestMapping("/")
+	public String home() {
+		return message;
+	}
 }
