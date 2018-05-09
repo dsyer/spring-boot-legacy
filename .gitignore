@@ -7,3 +7,6 @@
 .springBeans
 target/
 
+# IntelliJ IDEA Project Files
+.idea/
+*.iml
