@@ -1,11 +1,11 @@
 /*
- * Copyright 2012-2013 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,22 +18,28 @@ package org.springframework.boot.legacy.context.web;
 
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanNameGenerator;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.context.annotation.AnnotatedBeanDefinitionReader;
+import org.springframework.context.annotation.AnnotationConfigRegistry;
 import org.springframework.context.annotation.AnnotationConfigUtils;
 import org.springframework.context.annotation.AnnotationScopeMetadataResolver;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScopeMetadataResolver;
 import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * {@link GenericWebApplicationContext} that accepts annotated classes as input - in
- * particular {@link org.springframework.context.annotation.Configuration
- * &#64;Configuration}-annotated classes, but also plain
- * {@link org.springframework.stereotype.Component &#64;Component} classes and JSR-330
+ * {@link ServletWebServerApplicationContext} that accepts annotated classes as input - in
+ * particular {@link org.springframework.context.annotation.Configuration @Configuration}
+ * -annotated classes, but also plain {@link Component @Component} classes and JSR-330
  * compliant classes using {@code javax.inject} annotations. Allows for registering
  * classes one by one (specifying class names as config location) as well as for classpath
  * scanning (specifying base packages as config location).
@@ -41,27 +47,31 @@ import org.springframework.web.context.support.GenericWebApplicationContext;
  * Note: In case of multiple {@code @Configuration} classes, later {@code @Bean}
  * definitions will override ones defined in earlier loaded files. This can be leveraged
  * to deliberately override certain bean definitions via an extra Configuration class.
- * 
+ *
  * @author Phillip Webb
  * @author Dave Syer
+ * @author Daniel Cruver
  * @see #register(Class...)
  * @see #scan(String...)
+ * @see ServletWebServerApplicationContext
  * @see AnnotationConfigWebApplicationContext
  */
-public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWebApplicationContext {
+public class AnnotationConfigNonEmbeddedWebApplicationContext
+		extends NonEmbeddedWebApplicationContext
+		implements AnnotationConfigRegistry {
 
 	private final AnnotatedBeanDefinitionReader reader;
 
 	private final ClassPathBeanDefinitionScanner scanner;
 
-	private Class<?>[] annotatedClasses;
+	private final Set<Class<?>> annotatedClasses = new LinkedHashSet<>();
 
 	private String[] basePackages;
 
 	/**
-	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext} that needs to
-	 * be populated through {@link #register} calls and then manually {@linkplain #refresh
-	 * refreshed}.
+	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext} that needs
+	 * to be populated through {@link #register} calls and then manually
+	 * {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigNonEmbeddedWebApplicationContext() {
 		this.reader = new AnnotatedBeanDefinitionReader(this);
@@ -72,8 +82,8 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext}, deriving
 	 * bean definitions from the given annotated classes and automatically refreshing the
 	 * context.
-	 * @param annotatedClasses one or more annotated classes, e.g. {@link Configuration
-	 * &#64;Configuration} classes
+	 * @param annotatedClasses one or more annotated classes, e.g. {@code @Configuration}
+	 * classes
 	 */
 	public AnnotationConfigNonEmbeddedWebApplicationContext(
 			Class<?>... annotatedClasses) {
@@ -83,8 +93,22 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 	}
 
 	/**
-	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext}, scanning for
-	 * bean definitions in the given packages and automatically refreshing the context.
+	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext} with the
+	 * given {@code DefaultListableBeanFactory}. The context needs to be populated through
+	 * {@link #register} calls and then manually {@linkplain #refresh refreshed}.
+	 * @param beanFactory the DefaultListableBeanFactory instance to use for this context
+	 */
+	public AnnotationConfigNonEmbeddedWebApplicationContext(
+			DefaultListableBeanFactory beanFactory) {
+		super(beanFactory);
+		this.reader = new AnnotatedBeanDefinitionReader(this);
+		this.scanner = new ClassPathBeanDefinitionScanner(this);
+	}
+
+	/**
+	 * Create a new {@link AnnotationConfigNonEmbeddedWebApplicationContext}, scanning
+	 * for bean definitions in the given packages and automatically refreshing the
+	 * context.
 	 * @param basePackages the packages to check for annotated classes
 	 */
 	public AnnotationConfigNonEmbeddedWebApplicationContext(String... basePackages) {
@@ -108,17 +132,15 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 
 	/**
 	 * Provide a custom {@link BeanNameGenerator} for use with
-	 * {@link AnnotatedBeanDefinitionReader} and/or {@link ClassPathBeanDefinitionScanner}
-	 * , if any.
+	 * {@link AnnotatedBeanDefinitionReader} and/or
+	 * {@link ClassPathBeanDefinitionScanner}, if any.
 	 * <p>
 	 * Default is
 	 * {@link org.springframework.context.annotation.AnnotationBeanNameGenerator}.
 	 * <p>
 	 * Any call to this method must occur prior to calls to {@link #register(Class...)}
 	 * and/or {@link #scan(String...)}.
-	 * 
-	 * @param beanNameGenerator the BeanNameGenerator to set
-	 * 
+	 * @param beanNameGenerator the bean name generator
 	 * @see AnnotatedBeanDefinitionReader#setBeanNameGenerator
 	 * @see ClassPathBeanDefinitionScanner#setBeanNameGenerator
 	 */
@@ -137,8 +159,7 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 	 * <p>
 	 * Any call to this method must occur prior to calls to {@link #register(Class...)}
 	 * and/or {@link #scan(String...)}.
-	 * 
-	 * @param scopeMetadataResolver the ScopeMetadataResolver to set
+	 * @param scopeMetadataResolver the scope metadata resolver
 	 */
 	public void setScopeMetadataResolver(ScopeMetadataResolver scopeMetadataResolver) {
 		this.reader.setScopeMetadataResolver(scopeMetadataResolver);
@@ -150,17 +171,18 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 	 * {@link #refresh()} must be called in order for the context to fully process the new
 	 * class.
 	 * <p>
-	 * Calls to {@link #register} are idempotent; adding the same annotated class more
+	 * Calls to {@code #register} are idempotent; adding the same annotated class more
 	 * than once has no additional effect.
-	 * @param annotatedClasses one or more annotated classes, e.g. {@link Configuration
-	 * &#64;Configuration} classes
+	 * @param annotatedClasses one or more annotated classes, e.g. {@code @Configuration}
+	 * classes
 	 * @see #scan(String...)
 	 * @see #refresh()
 	 */
+	@Override
 	public final void register(Class<?>... annotatedClasses) {
-		this.annotatedClasses = annotatedClasses;
 		Assert.notEmpty(annotatedClasses,
-				"At least one annotated class must be specified");
+						"At least one annotated class must be specified");
+		this.annotatedClasses.addAll(Arrays.asList(annotatedClasses));
 	}
 
 	/**
@@ -170,9 +192,10 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 	 * @see #register(Class...)
 	 * @see #refresh()
 	 */
+	@Override
 	public final void scan(String... basePackages) {
-		this.basePackages = basePackages;
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
+		this.basePackages = basePackages;
 	}
 
 	@Override
@@ -187,8 +210,8 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext extends GenericWeb
 		if (this.basePackages != null && this.basePackages.length > 0) {
 			this.scanner.scan(this.basePackages);
 		}
-		if (this.annotatedClasses != null && this.annotatedClasses.length > 0) {
-			this.reader.register(this.annotatedClasses);
+		if (!this.annotatedClasses.isEmpty()) {
+			this.reader.register(ClassUtils.toClassArray(this.annotatedClasses));
 		}
 	}
 
