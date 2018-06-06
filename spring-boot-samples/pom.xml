@@ -2,18 +2,24 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-    <groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-legacy-parent</artifactId>
-	<version>2.0.0.BUILD-SNAPSHOT</version>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.2.RELEASE</version>
+	</parent>
+	<artifactId>spring-boot-samples</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-	<name>Spring Boot Legacy Parent</name>
-	<description>Spring Boot Servlet 2.5 support</description>
+	<name>Spring Boot Samples</name>
+	<description>Spring Boot Samples Parent Project</description>
 
     <modules>
-      <module>spring-boot-legacy</module>
-      <module>spring-boot-samples</module>
+      <module>spring-boot-sample-gae</module>
+      <module>spring-boot-sample-gae-2.5</module>
+	  <module>spring-boot-sample-gae-3.0</module>
+      <module>spring-boot-sample-gae-3.1</module>
+      <module>spring-boot-sample-secure-legacy</module>
     </modules>
 
     <build>
