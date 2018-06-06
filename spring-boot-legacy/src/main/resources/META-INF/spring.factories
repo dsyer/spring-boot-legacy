@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.springframework.boot.legacy.context.web.MetricFilterAutoConfiguration,\
 org.springframework.boot.legacy.context.web.SecurityFilterAutoConfiguration
