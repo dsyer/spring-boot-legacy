@@ -31,8 +31,8 @@ import javax.servlet.ServletContext;
 @ComponentScan
 @EnableAutoConfiguration
 @RestController
-public class Application
-{
+public class Application {
+
 	@Autowired
 	private ServletContext context;
 

@@ -57,8 +57,8 @@ import java.io.IOException;
 @ConditionalOnMissingClass("javax.servlet.ServletRegistration")
 @AutoConfigureAfter({
 		MetricsAutoConfiguration.class})
-public class MetricFilterAutoConfiguration
-{
+public class MetricFilterAutoConfiguration {
+
 	private static final int UNDEFINED_HTTP_STATUS = 999;
 
 	private static final String UNKNOWN_PATH_SUFFIX = "/unmapped";

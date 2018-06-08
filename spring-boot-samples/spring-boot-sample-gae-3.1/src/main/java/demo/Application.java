@@ -32,8 +32,8 @@ import javax.servlet.ServletContext;
 @ComponentScan(basePackages = "demo.hello")
 @SpringBootApplication
 @RestController
-public class Application extends SpringBootServletInitializer
-{
+public class Application extends SpringBootServletInitializer {
+
 	@Autowired
 	private ServletContext context;
 

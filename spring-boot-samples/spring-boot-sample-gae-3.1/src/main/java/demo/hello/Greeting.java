@@ -19,8 +19,8 @@ package demo.hello;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Greeting
-{
+public class Greeting {
+
 	private final long id;
 	private final String content;
 

@@ -86,8 +86,7 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext
 	 * classes
 	 */
 	public AnnotationConfigNonEmbeddedWebApplicationContext(
-			Class<?>... annotatedClasses)
-	{
+			Class<?>... annotatedClasses) {
 		this();
 		register(annotatedClasses);
 		refresh();

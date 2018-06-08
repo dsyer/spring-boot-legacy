@@ -28,16 +28,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
-public class HelloWorldController
-{
-	public static final String HELLO_WORLD_COUNTER = "hello-world.requested";
+public class HelloWorldController {
 
+	public static final String HELLO_WORLD_COUNTER = "hello-world.requested";
 	private static final String HELLO_TEMPLATE = "Hello, %s!";
+
 	private final Counter counter;
 	private final AtomicInteger internalCounter;
 
-	public HelloWorldController(MeterRegistry registry)
-	{
+	public HelloWorldController(MeterRegistry registry) {
+
 		this.counter = registry.counter(HELLO_WORLD_COUNTER);
 		this.internalCounter = new AtomicInteger();
 	}
@@ -45,8 +45,9 @@ public class HelloWorldController
 	@Timed
 	@GetMapping(value = "/hello-world", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public Greeting sayHello(@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name)
-	{
+	public Greeting sayHello(
+			@RequestParam(name = "name", required = false, defaultValue = "Stranger") String name) {
+
 		counter.increment();
 		return new Greeting(internalCounter.incrementAndGet(), String.format(HELLO_TEMPLATE, name));
 	}

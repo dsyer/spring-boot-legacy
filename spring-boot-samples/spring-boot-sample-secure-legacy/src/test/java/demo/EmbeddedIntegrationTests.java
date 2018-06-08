@@ -17,10 +17,10 @@
 package demo;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,7 +41,7 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(classes = Application.class)
 public class EmbeddedIntegrationTests {
 
-	private static final Logger log = LoggerFactory.getLogger(EmbeddedIntegrationTests.class);
+	private static final Log logger = LogFactory.getLog(EmbeddedIntegrationTests.class);
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -84,7 +84,7 @@ public class EmbeddedIntegrationTests {
 		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:" + port  + "/", HttpMethod.GET, request, String.class, new Object[]{} );
 
 		String body = responseEntity.getBody();
-		log.info("found / = " + body);
+		logger.info("found / = " + body);
 		assertTrue("Wrong body: " + body, body.contains(expectedMessage));
 	}
 
@@ -103,7 +103,7 @@ public class EmbeddedIntegrationTests {
 		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:" + port  + "/version", HttpMethod.GET, request, String.class, new Object[]{} );
 		String body = responseEntity.getBody();
 
-		log.info("found version = " + body);
+		logger.info("found version = " + body);
 		assertTrue("Wrong body: " + body, body.contains(expectedVersion));
 	}
 }

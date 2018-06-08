@@ -16,8 +16,8 @@
 
 package org.springframework.boot.legacy.context.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.ParentContextApplicationContextInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -46,7 +46,7 @@ import javax.servlet.ServletContext;
  */
 public class SpringBootContextLoaderListener extends ContextLoaderListener {
 
-	private static final Logger log = LoggerFactory.getLogger(SpringBootContextLoaderListener.class);
+	private static final Log logger = LogFactory.getLog(SpringBootContextLoaderListener.class);
 
 	private static final String INIT_PARAM_DELIMITERS = ",; \t\n";
 
@@ -79,13 +79,13 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		WebApplicationContext context;
 		ApplicationContext parent = getExistingRootWebApplicationContext(servletContext);
 		if (parent != null) {
-			log.info("Root context already created (using as parent).");
+			logger.info("Root context already created (using as parent).");
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, null);
 			builder.initializers(new ParentContextApplicationContextInitializer(parent));
 
 			context = (WebApplicationContext) builder.run();
 		} else {
-			log.info("No existing root context; will created one.");
+			logger.info("No existing root context; will created one.");
 
 			builder.initializers(new ApplicationContextInitializer<GenericWebApplicationContext>() {
 				@Override

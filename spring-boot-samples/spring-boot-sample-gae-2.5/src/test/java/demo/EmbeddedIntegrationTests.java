@@ -18,11 +18,11 @@ package demo;
 
 import demo.hello.Greeting;
 import demo.hello.HelloWorldController;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
@@ -43,25 +43,31 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = Application.class)
-public class EmbeddedIntegrationTests
-{
+public class EmbeddedIntegrationTests {
 
-	private static final Logger log = LoggerFactory.getLogger(EmbeddedIntegrationTests.class);
+	private static final Log logger = LogFactory.getLog(EmbeddedIntegrationTests.class);
+
 	@Value("${info.version}")
 	private String expectedVersion;
+
 	private String password;
+
 	@Value("${local.server.port}")
 	private int port;
+
 	@Autowired
 	private TestRestTemplate restTemplate;
+
 	@Autowired
 	private InMemoryUserDetailsManager userDetailsManager;
+
 	private String username = "user";
 
 	@Before
 	public void setup()
 	{
-		// Get automatically generated user password.
+		// Get password from userDetailsManager, currently this is hardcoded in application.properties but
+		// this is especially important when it is set to be automatically generated.
 		UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
 		password = userDetails.getPassword().replace("{noop}", "");
 		BasicAuthorizationInterceptor bai = new BasicAuthorizationInterceptor(username, password);
@@ -72,9 +78,9 @@ public class EmbeddedIntegrationTests
 	public void testActuatorConditionsEndpoint()
 	{
 		String body = restTemplate.getForObject("http://127.0.0.1:" + port + "/version", String.class);
-		log.debug("found version = {}", body);
+		logger.debug("found version = " + body);
 		String response = restTemplate.getForObject("http://127.0.0.1:" + port + "/actuator/conditions", String.class);
-		log.debug(response);
+		logger.debug(response);
 	}
 
 	@Test
@@ -87,7 +93,7 @@ public class EmbeddedIntegrationTests
 			expectedValue++;
 
 			Greeting greeting = restTemplate.getForObject("http://127.0.0.1:" + port + "/hello-world", Greeting.class);
-			log.debug("greeting = " + greeting);
+			logger.debug("greeting = " + greeting);
 
 			// Hit endpoint and check counter.
 			assertThat(greeting, is(not(nullValue())));
@@ -103,7 +109,7 @@ public class EmbeddedIntegrationTests
 
 		String response = restTemplate.getForObject("http://127.0.0.1:" + port + "/actuator/metrics/http.server.requests", String.class);
 
-		log.info(response);
+		logger.info(response);
 	}
 
 	@Test
@@ -111,7 +117,7 @@ public class EmbeddedIntegrationTests
 	{
 		//mvc.perform(get("/"))
 		String body = restTemplate.getForObject("http://127.0.0.1:" + port + "/version", String.class);
-		log.debug("found version = {}", body);
+		logger.debug("found version = " + body);
 		assertTrue("Wrong body: " + body, body.contains(expectedVersion));
 	}
 }
