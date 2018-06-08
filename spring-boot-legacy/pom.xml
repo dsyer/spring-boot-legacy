@@ -6,7 +6,7 @@
 	<artifactId>spring-boot-legacy</artifactId>
 	<version>2.0.0.BUILD-SNAPSHOT</version>
 
-	<name>spring-boot-legacy</name>
+	<name>Spring Boot Legacy</name>
 	<description>Spring Boot web.xml support</description>
 
 	<parent>
@@ -33,10 +33,6 @@
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-				<exclusion>
-					<artifactId>spring-boot-starter-validation</artifactId>
-					<groupId>org.springframework.boot</groupId>
 				</exclusion>
 			</exclusions>
 			<optional>true</optional>
@@ -67,6 +63,7 @@
 	</dependencyManagement>
 
 	<properties>
+		<!-- Spring Boot 2.0.x requires Java 8 or 9 -->
 		<java.version>1.8</java.version>
 		<catalina.version>6.0.36</catalina.version>
 		<spring-boot.version>2.0.2.RELEASE</spring-boot.version>

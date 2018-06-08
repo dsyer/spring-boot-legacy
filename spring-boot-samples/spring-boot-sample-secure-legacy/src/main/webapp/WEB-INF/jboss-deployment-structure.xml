@@ -1,0 +1,31 @@
+<jboss-deployment-structure>
+	<!-- Make sub deployments isolated by default, so they cannot see each others classes without a Class-Path entry -->
+	<ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+
+	<deployment>
+		<exclude-subsystems>
+			<subsystem name="jaxrs" />
+			<subsystem name="resteasy" />
+		</exclude-subsystems>
+		<exclusions>
+			<module name="com.fasterxml.jackson.core.jackson-annotations" />
+			<module name="com.fasterxml.jackson.core.jackson-core" />
+			<module name="com.fasterxml.jackson.core.jackson-databind" />
+			<module name="com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider" />
+
+			<module name="org.jboss.resteasy.resteasy-jackson-provider" />
+			<module name="org.jboss.resteasy.resteasy-jackson2-provider" />
+			<module name="org.jboss.resteasy.resteasy-hibernatevalidator-provider"/>
+
+			<module name="org.apache.xalan" />
+			<module name="org.apache.xerces" />
+
+			<!--
+			<module name="javaee.api"/>
+			<module name="javax.faces.api"/>
+			<module name="javax.validation.api"/>
+			-->
+
+		</exclusions>
+	</deployment>
+</jboss-deployment-structure>
