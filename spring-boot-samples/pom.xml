@@ -15,9 +15,7 @@
 	<description>Spring Boot Samples Parent Project</description>
 
     <modules>
-      <module>spring-boot-sample-gae</module>
       <module>spring-boot-sample-gae-2.5</module>
-	  <module>spring-boot-sample-gae-3.0</module>
       <module>spring-boot-sample-gae-3.1</module>
       <module>spring-boot-sample-secure-legacy</module>
     </modules>
