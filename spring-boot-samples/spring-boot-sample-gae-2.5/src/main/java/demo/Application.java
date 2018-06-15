@@ -16,26 +16,18 @@
 
 package demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletContext;
-
-@Configuration
-@ComponentScan(basePackages = "demo.hello")
 @SpringBootApplication
+@ComponentScan(basePackages = "demo.hello")
 @RestController
 public class Application extends SpringBootServletInitializer {
-
-	@Autowired
-	private ServletContext context;
 
 	@Value("${info.version}")
 	private String version;
@@ -53,10 +45,4 @@ public class Application extends SpringBootServletInitializer {
     public String getVersion() {
     	return version;
     }
-
-    @RequestMapping("/servlet-version")
-	public String getServletVersion() {
-    	return context.getEffectiveMajorVersion() + "." + context.getEffectiveMinorVersion();
-	}
-
 }
