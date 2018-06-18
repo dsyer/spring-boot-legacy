@@ -32,8 +32,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import java.util.Arrays;
 
 /**
  * A {@link ContextLoaderListener} that uses {@link SpringApplication} to initialize an
@@ -46,30 +46,22 @@ import javax.servlet.ServletContext;
  */
 public class SpringBootContextLoaderListener extends ContextLoaderListener {
 
-	private static final Log logger = LogFactory.getLog(SpringBootContextLoaderListener.class);
+	protected Log logger; // Don't initialize early
 
 	private static final String INIT_PARAM_DELIMITERS = ",; \t\n";
 
 	@Override
 	public WebApplicationContext initWebApplicationContext(
 			final ServletContext servletContext) {
+		this.logger = LogFactory.getLog(getClass());
+		this.logger.debug("Initializing WebApplicationContext");
 		String configLocationParam = servletContext.getInitParameter(CONFIG_LOCATION_PARAM);
 		String[] classNames = StringUtils.tokenizeToStringArray(configLocationParam, INIT_PARAM_DELIMITERS);
 
-		Class[] classes = new Class[classNames.length];
-		for (int i = 0; i < classes.length; i++) {
-			try {
-				classes[i] = ClassUtils.forName(classNames[i], null);
-			} catch (ClassNotFoundException e) {
-				throw new ApplicationContextException(
-						"Failed to load custom context class [" + classNames[i] + "]", e);
-			}
-		}
-
-		SpringApplicationBuilder builder = new SpringApplicationBuilder(classes);
+		SpringApplicationBuilder builder = createSpringApplicationBuilder(classNames);
 
 		StandardServletEnvironment environment = new StandardServletEnvironment();
-		environment.initPropertySources(servletContext, (ServletConfig) null);
+		environment.initPropertySources(servletContext, null);
 		builder.environment(environment);
 
 		@SuppressWarnings("unchecked")
@@ -79,8 +71,8 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		WebApplicationContext context;
 		ApplicationContext parent = getExistingRootWebApplicationContext(servletContext);
 		if (parent != null) {
-			logger.info("Root context already created (using as parent).");
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, null);
+			this.logger.info("Root context already created (using as parent).");
 			builder.initializers(new ParentContextApplicationContextInitializer(parent));
 
 			context = (WebApplicationContext) builder.run();
@@ -100,6 +92,25 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		return context;
 	}
 
+	protected SpringApplicationBuilder createSpringApplicationBuilder(String[] classNames) {
+
+		if(this.logger.isDebugEnabled()) {
+			this.logger.debug("Creating SpringApplicationBuilder ( with classes: " + Arrays.toString(classNames) + ")");
+		}
+
+		Class[] classes = new Class[classNames.length];
+		for (int i = 0; i < classes.length; i++) {
+			try {
+				classes[i] = ClassUtils.forName(classNames[i], null);
+			} catch (ClassNotFoundException e) {
+				throw new ApplicationContextException(
+						"Failed to load custom context class [" + classNames[i] + "]", e);
+			}
+		}
+
+		return new SpringApplicationBuilder(classes);
+	}
+
 	private ApplicationContext getExistingRootWebApplicationContext(ServletContext servletContext) {
 		Object context = servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 		if (context instanceof ApplicationContext) {
@@ -110,8 +121,11 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 
 	@Override
 	protected Class<?> determineContextClass(ServletContext servletContext) {
+		this.logger = LogFactory.getLog(getClass());
 		String contextClassName = servletContext.getInitParameter(CONTEXT_CLASS_PARAM);
+
 		if (contextClassName != null) {
+			this.logger.info("Using context class: " + contextClassName);
 			try {
 				return ClassUtils.forName(contextClassName, null);
 			}
@@ -121,6 +135,8 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 						e);
 			}
 		}
+
+		logger.debug("Using default context class: " + AnnotationConfigNonEmbeddedWebApplicationContext.class.getCanonicalName() + "" );
 		return AnnotationConfigNonEmbeddedWebApplicationContext.class;
 	}
 
