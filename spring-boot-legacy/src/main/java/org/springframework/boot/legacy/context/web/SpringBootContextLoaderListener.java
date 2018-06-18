@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.ParentContextApplicationContextInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.legacy.context.web.servlet.support.ErrorPageFilterConfiguration;
+import org.springframework.boot.web.servlet.support.ErrorPageFilter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.context.ApplicationContextInitializer;
@@ -48,6 +50,30 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 
 	protected Log logger; // Don't initialize early
 
+	/**
+	 * Name of servlet context parameter (i.e., {@value}) that can specify to
+	 * disable registration of error page filter.
+	 *
+	 * @see org.springframework.boot.web.servlet.support.SpringBootServletInitializer#setRegisterErrorPageFilter(boolean).
+	 */
+	public static final String SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM = "springBootLegacyRegisterErrorPageFilter";
+
+	private boolean registerErrorPageFilter = true;
+
+	/**
+	 * Set if the {@link ErrorPageFilter} should be registered. Set to {@code false} if
+	 * error page mappings should be handled via the server and not Spring Boot.
+	 *
+	 * This method is a clone from {@link org.springframework.boot.web.servlet.support.SpringBootServletInitializer} but since
+	 * we are initializing it differently, we can not call this method on the {@link ContextLoaderListener} a servlet context
+	 * param {@link #SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM} has been provided for setting this value.
+	 *
+	 * @param registerErrorPageFilter if the {@link ErrorPageFilter} should be registered.
+	 */
+	protected final void setRegisterErrorPageFilter(boolean registerErrorPageFilter) {
+		this.registerErrorPageFilter = registerErrorPageFilter;
+	}
+
 	private static final String INIT_PARAM_DELIMITERS = ",; \t\n";
 
 	@Override
@@ -57,6 +83,8 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		this.logger.debug("Initializing WebApplicationContext");
 		String configLocationParam = servletContext.getInitParameter(CONFIG_LOCATION_PARAM);
 		String[] classNames = StringUtils.tokenizeToStringArray(configLocationParam, INIT_PARAM_DELIMITERS);
+
+		setRegisterErrorPageFilterFromContextParam(servletContext);
 
 		SpringApplicationBuilder builder = createSpringApplicationBuilder(classNames);
 
@@ -89,7 +117,26 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, context);
 		}
 
+		// Ensure error pages are registered
+		if (this.registerErrorPageFilter) {
+			builder.sources(ErrorPageFilterConfiguration.class);
+		}
+
 		return context;
+	}
+
+	private void setRegisterErrorPageFilterFromContextParam(ServletContext servletContext) {
+		String contextParamValue = servletContext.getInitParameter(SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM);
+
+		if(contextParamValue == null) {
+			this.logger.debug("No context init parameter found for " + SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM + "; leaving it at default value: " + this.registerErrorPageFilter);
+		} else if(StringUtils.hasText(contextParamValue)) {
+			boolean booleanValue = Boolean.parseBoolean(contextParamValue);
+			setRegisterErrorPageFilter(booleanValue);
+			this.logger.debug("Found context init parameter found for " + SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM + "; updating registerErrorPageFilter to " + this.registerErrorPageFilter);
+		} else {
+			this.logger.warn("Context init parameter found for " + SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM + " but it is empty; leaving it at default value: " + this.registerErrorPageFilter);
+		}
 	}
 
 	protected SpringApplicationBuilder createSpringApplicationBuilder(String[] classNames) {
