@@ -1,7 +1,7 @@
 Spring Boot Support for Servlet 2.5
 ===================================
 
-Latest release 2.0.1.RELEASE, updated to Spring Boot 2.0.3.RELEASE.
+Latest release 2.0.0.RELEASE, updated to Spring Boot 2.0.3.RELEASE.
 
 Spring Boot is built on Servlet 3.1. Older servlet versions can be
 used with Spring Boot, but some workarounds are needed. This project
