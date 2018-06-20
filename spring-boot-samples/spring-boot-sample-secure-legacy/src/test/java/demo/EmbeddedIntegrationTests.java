@@ -16,11 +16,15 @@
 
 package demo;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,9 +36,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -81,7 +82,7 @@ public class EmbeddedIntegrationTests {
 
 		HttpEntity<String> request = new HttpEntity<>(headers);
 
-		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:" + port  + "/", HttpMethod.GET, request, String.class, new Object[]{} );
+		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:" + port + "/", HttpMethod.GET, request, String.class, new Object[] {});
 
 		String body = responseEntity.getBody();
 		logger.info("found / = " + body);
@@ -100,7 +101,7 @@ public class EmbeddedIntegrationTests {
 
 		HttpEntity<String> request = new HttpEntity<>(headers);
 
-		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:" + port  + "/version", HttpMethod.GET, request, String.class, new Object[]{} );
+		ResponseEntity<String> responseEntity = restTemplate.exchange("http://127.0.0.1:" + port + "/version", HttpMethod.GET, request, String.class, new Object[] {});
 		String body = responseEntity.getBody();
 
 		logger.info("found version = " + body);

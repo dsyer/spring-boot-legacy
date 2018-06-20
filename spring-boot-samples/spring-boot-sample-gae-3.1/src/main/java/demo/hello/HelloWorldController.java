@@ -16,26 +16,30 @@
 
 package demo.hello;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
+
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-
 @RestController
 public class HelloWorldController {
 
 	public static final String HELLO_WORLD_COUNTER = "hello-world.requested";
+
 	private static final String HELLO_TEMPLATE = "Hello, %s!";
+
 	private static final java.util.logging.Logger logger = Logger.getLogger(HelloWorldController.class.getCanonicalName());
 
 	private final Counter counter;
+
 	private final AtomicInteger internalCounter;
 
 	public HelloWorldController(MeterRegistry registry) {

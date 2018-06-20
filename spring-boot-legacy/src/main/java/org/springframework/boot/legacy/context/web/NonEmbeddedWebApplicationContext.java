@@ -16,8 +16,18 @@
 
 package org.springframework.boot.legacy.context.web;
 
+import java.util.Collection;
+import java.util.EventListener;
+
+import javax.servlet.Filter;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.web.servlet.LegacyServletContextInitializerBeans;
@@ -32,14 +42,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.Filter;
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import java.util.Collection;
-import java.util.EventListener;
 
 /**
  * A version of the {@link ServletWebServerApplicationContext} that can be used with a
@@ -88,7 +90,7 @@ public class NonEmbeddedWebApplicationContext extends GenericWebApplicationConte
 			}
 			catch (ServletException ex) {
 				throw new ApplicationContextException("Cannot initialize servlet context",
-													  ex);
+						ex);
 			}
 		}
 		initPropertySources();
@@ -124,9 +126,10 @@ public class NonEmbeddedWebApplicationContext extends GenericWebApplicationConte
 
 		Collection<ServletContextInitializer> servletContextInitializerBeans;
 
-		if(servletContext.getMajorVersion() >= 3) {
+		if (servletContext.getMajorVersion() >= 3) {
 			servletContextInitializerBeans = getServletContextInitializerBeans();
-		} else {
+		}
+		else {
 			servletContextInitializerBeans = getLegacyServletContextInitializerBeans();
 		}
 
@@ -221,23 +224,23 @@ public class NonEmbeddedWebApplicationContext extends GenericWebApplicationConte
 	}
 
 	@Override
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
-	}
-
-	@Override
 	public String getNamespace() {
 		return this.namespace;
 	}
 
 	@Override
-	public void setServletConfig(ServletConfig servletConfig) {
-		this.servletConfig = servletConfig;
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
 	@Override
 	public ServletConfig getServletConfig() {
 		return this.servletConfig;
+	}
+
+	@Override
+	public void setServletConfig(ServletConfig servletConfig) {
+		this.servletConfig = servletConfig;
 	}
 
 }
