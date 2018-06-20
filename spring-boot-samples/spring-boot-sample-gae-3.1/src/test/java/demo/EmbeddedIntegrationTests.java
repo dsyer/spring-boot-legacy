@@ -16,6 +16,12 @@
 
 package demo;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertTrue;
+
 import demo.hello.Greeting;
 import demo.hello.HelloWorldController;
 import org.apache.commons.logging.Log;
@@ -23,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
@@ -33,12 +40,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -64,8 +65,7 @@ public class EmbeddedIntegrationTests {
 	private String username = "user";
 
 	@Before
-	public void setup()
-	{
+	public void setup() {
 		// Get password from userDetailsManager, currently this is hardcoded in application.properties but
 		// this is especially important when it is set to be automatically generated.
 		UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
@@ -75,8 +75,7 @@ public class EmbeddedIntegrationTests {
 	}
 
 	@Test
-	public void testActuatorConditionsEndpoint()
-	{
+	public void testActuatorConditionsEndpoint() {
 		String body = restTemplate.getForObject("http://127.0.0.1:" + port + "/version", String.class);
 		logger.debug("found version = " + body);
 		String response = restTemplate.getForObject("http://127.0.0.1:" + port + "/actuator/conditions", String.class);
@@ -84,12 +83,10 @@ public class EmbeddedIntegrationTests {
 	}
 
 	@Test
-	public void testHelloWorldCounter()
-	{
+	public void testHelloWorldCounter() {
 		long expectedValue = 0;
 
-		for (int i = 0; i < 10; i++)
-		{
+		for (int i = 0; i < 10; i++) {
 			expectedValue++;
 
 			Greeting greeting = restTemplate.getForObject("http://127.0.0.1:" + port + "/hello-world", Greeting.class);
@@ -113,8 +110,7 @@ public class EmbeddedIntegrationTests {
 	}
 
 	@Test
-	public void testVersion()
-	{
+	public void testVersion() {
 		//mvc.perform(get("/"))
 		String body = restTemplate.getForObject("http://127.0.0.1:" + port + "/version", String.class);
 		logger.debug("found version = " + body);

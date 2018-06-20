@@ -16,6 +16,7 @@
 package org.springframework.boot.legacy.context.web;
 
 import org.junit.Test;
+
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -30,13 +31,13 @@ public class AnnotationConfigNonEmbeddedWebApplicationContextTests {
 	public void test() {
 		ConfigurableApplicationContext context = new SpringApplicationBuilder(
 				TestConfiguration.class).contextClass(
-						AnnotationConfigNonEmbeddedWebApplicationContext.class).run();
+				AnnotationConfigNonEmbeddedWebApplicationContext.class).run();
 		context.close();
 	}
-	
+
 	@Configuration
 	protected static class TestConfiguration {
-		
+
 	}
 
 }

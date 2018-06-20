@@ -16,7 +16,18 @@
 
 package org.springframework.boot.legacy.context.web;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.Servlet;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 import io.micrometer.core.instrument.MeterRegistry;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -34,15 +45,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import java.io.IOException;
-
 /**
  * {@link EnableAutoConfiguration Auto-configuration} that records Servlet interactions
  * with a {@link MeterRegistry}.
@@ -52,8 +54,8 @@ import java.io.IOException;
  * @author Daniel Cruver
  */
 @Configuration
-@ConditionalOnBean({ MeterRegistry.class })
-@ConditionalOnClass({ Servlet.class, MetricsAutoConfiguration.class })
+@ConditionalOnBean({MeterRegistry.class})
+@ConditionalOnClass({Servlet.class, MetricsAutoConfiguration.class})
 @ConditionalOnMissingClass("javax.servlet.ServletRegistration")
 @AutoConfigureAfter({
 		MetricsAutoConfiguration.class})

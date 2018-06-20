@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Greeting {
 
 	private final long id;
+
 	private final String content;
 
 	@JsonCreator
@@ -40,8 +41,7 @@ public class Greeting {
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "Greeting{" +
 				"id=" + id +
 				", content='" + content + '\'' +

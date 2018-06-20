@@ -32,17 +32,17 @@ public class Application extends SpringBootServletInitializer {
 	@Value("${info.version}")
 	private String version;
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
-    
-    @RequestMapping("/")
-    public String home() {
-    	return "Spring Boot Sample - Google AppEngine - Java 8 Runtime with Servlet 2.5 Web Descriptor";
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    @RequestMapping("/version")
-    public String getVersion() {
-    	return version;
-    }
+	@RequestMapping("/")
+	public String home() {
+		return "Spring Boot Sample - Google AppEngine - Java 8 Runtime with Servlet 2.5 Web Descriptor";
+	}
+
+	@RequestMapping("/version")
+	public String getVersion() {
+		return version;
+	}
 }

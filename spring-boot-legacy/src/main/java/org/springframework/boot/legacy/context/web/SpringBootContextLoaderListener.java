@@ -16,8 +16,13 @@
 
 package org.springframework.boot.legacy.context.web;
 
+import java.util.Arrays;
+
+import javax.servlet.ServletContext;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.ParentContextApplicationContextInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -34,9 +39,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
-import javax.servlet.ServletContext;
-import java.util.Arrays;
-
 /**
  * A {@link ContextLoaderListener} that uses {@link SpringApplication} to initialize an
  * application context. Allows Servlet 2.5 applications (with web.xml) to take advantage
@@ -48,15 +50,17 @@ import java.util.Arrays;
  */
 public class SpringBootContextLoaderListener extends ContextLoaderListener {
 
-	protected Log logger; // Don't initialize early
-
 	/**
 	 * Name of servlet context parameter (i.e., {@value}) that can specify to
 	 * disable registration of error page filter.
 	 *
-	 * @see org.springframework.boot.web.servlet.support.SpringBootServletInitializer#setRegisterErrorPageFilter(boolean).
+	 * @see org.springframework.boot.web.servlet.support.SpringBootServletInitializer#setRegisterErrorPageFilter(boolean)
 	 */
 	public static final String SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM = "springBootLegacyRegisterErrorPageFilter";
+
+	private static final String INIT_PARAM_DELIMITERS = ",; \t\n";
+
+	protected Log logger; // Don't initialize early
 
 	private boolean registerErrorPageFilter = true;
 
@@ -73,8 +77,6 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 	protected final void setRegisterErrorPageFilter(boolean registerErrorPageFilter) {
 		this.registerErrorPageFilter = registerErrorPageFilter;
 	}
-
-	private static final String INIT_PARAM_DELIMITERS = ",; \t\n";
 
 	@Override
 	public WebApplicationContext initWebApplicationContext(
@@ -128,20 +130,22 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 	private void setRegisterErrorPageFilterFromContextParam(ServletContext servletContext) {
 		String contextParamValue = servletContext.getInitParameter(SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM);
 
-		if(contextParamValue == null) {
+		if (contextParamValue == null) {
 			this.logger.debug("No context init parameter found for " + SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM + "; leaving it at default value: " + this.registerErrorPageFilter);
-		} else if(StringUtils.hasText(contextParamValue)) {
+		}
+		else if (StringUtils.hasText(contextParamValue)) {
 			boolean booleanValue = Boolean.parseBoolean(contextParamValue);
 			setRegisterErrorPageFilter(booleanValue);
 			this.logger.debug("Found context init parameter found for " + SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM + "; updating registerErrorPageFilter to " + this.registerErrorPageFilter);
-		} else {
+		}
+		else {
 			this.logger.warn("Context init parameter found for " + SPRING_BOOT_LEGACY_REGISTER_ERROR_PAGE_FILTER_PARAM + " but it is empty; leaving it at default value: " + this.registerErrorPageFilter);
 		}
 	}
 
 	protected SpringApplicationBuilder createSpringApplicationBuilder(String[] classNames) {
 
-		if(this.logger.isDebugEnabled()) {
+		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Creating SpringApplicationBuilder ( with classes: " + Arrays.toString(classNames) + ")");
 		}
 
@@ -149,7 +153,8 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 		for (int i = 0; i < classes.length; i++) {
 			try {
 				classes[i] = ClassUtils.forName(classNames[i], null);
-			} catch (ClassNotFoundException e) {
+			}
+			catch (ClassNotFoundException e) {
 				throw new ApplicationContextException(
 						"Failed to load custom context class [" + classNames[i] + "]", e);
 			}
@@ -183,7 +188,7 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 			}
 		}
 
-		logger.debug("Using default context class: " + AnnotationConfigNonEmbeddedWebApplicationContext.class.getCanonicalName() + "" );
+		logger.debug("Using default context class: " + AnnotationConfigNonEmbeddedWebApplicationContext.class.getCanonicalName() + "");
 		return AnnotationConfigNonEmbeddedWebApplicationContext.class;
 	}
 

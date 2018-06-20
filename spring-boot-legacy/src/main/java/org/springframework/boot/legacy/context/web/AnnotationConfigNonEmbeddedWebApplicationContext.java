@@ -16,6 +16,10 @@
 
 package org.springframework.boot.legacy.context.web;
 
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -31,10 +35,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * {@link ServletWebServerApplicationContext} that accepts annotated classes as input - in
@@ -181,7 +181,7 @@ public class AnnotationConfigNonEmbeddedWebApplicationContext
 	@Override
 	public final void register(Class<?>... annotatedClasses) {
 		Assert.notEmpty(annotatedClasses,
-						"At least one annotated class must be specified");
+				"At least one annotated class must be specified");
 		this.annotatedClasses.addAll(Arrays.asList(annotatedClasses));
 	}
 
