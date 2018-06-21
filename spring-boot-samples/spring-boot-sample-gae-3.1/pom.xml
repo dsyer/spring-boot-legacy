@@ -129,7 +129,6 @@
 		<java.version>1.8</java.version>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
 		<appengine.version>1.9.63</appengine.version>
-		<gae.version>5</gae.version>
 	</properties>
 
 	<build>
