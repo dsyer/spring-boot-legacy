@@ -20,6 +20,16 @@ $ cd spring-boot-samples/spring-boot-sample-gae-3.1
 $ mvn appengine:update
 ```
 
+To Deploy to specific AppEngine Project and Version:
+```
+$ git clone https://github.com/dyser/spring-boot-legacy
+$ cd spring-boot-legacy
+$ mvn clean install
+$ cd spring-boot-samples/spring-boot-sample-gae-3.1
+$ mvn appengine:update -Dgae.appId=${APP_ENGINE_PROJECT_ID} -Dgae.version=${APP_ENGINE_PROJECT_VERSION}
+$ 
+```
+
 Also runs as a deployed WAR in WTP or regular Tomcat container. The `main()` app (normal Spring Boot launcher) should also work.
 
 > NOTE: Google AppEngine does not allow JMX, so you have to switch it off in a Spring Boot app (`spring.jmx.enabled=false`).

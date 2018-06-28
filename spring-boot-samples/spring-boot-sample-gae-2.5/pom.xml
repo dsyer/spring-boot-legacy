@@ -14,6 +14,17 @@
 	<name>Spring Boot Sample GAE 2.5</name>
 	<description>Spring Boot Sample in Google AppEngine using Java 8 Runtime with Servlet 2.5 (w/Spring Boot Legacy)</description>
 
+	<properties>
+		<start-class>demo.Application</start-class>
+
+		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
+
+		<appengine.version>1.9.63</appengine.version>
+
+		<gae.appId>cf-sandbox-dsyer</gae.appId>
+		<gae.version>5</gae.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -107,6 +118,7 @@
 			<version>${appengine.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -128,40 +140,21 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<start-class>demo.Application</start-class>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
-		<appengine.version>1.9.63</appengine.version>
-		<gae.version>5</gae.version>
-	</properties>
-
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>com.google.cloud.tools</groupId>
+				<groupId>com.google.appengine</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>1.3.1</version>
+				<version>${appengine.version}</version>
 				<configuration>
-					<project>spring-boot-legacy-206917</project>
-					<version>1</version>
+					<appId>${gae.appId}</appId>
+					<version>${gae.version}</version>
+					<enableJarClasses>true</enableJarClasses>
+					<port>8181</port>
 				</configuration>
 			</plugin>
 			<plugin>
