@@ -14,6 +14,17 @@
 	<name>Spring Boot Sample GAE 3.1</name>
 	<description>Spring Boot Sample in Google AppEngine using Java 8 Runtime with Servlet 3.1 (w/o Spring Boot Legacy)</description>
 
+	<properties>
+		<start-class>demo.Application</start-class>
+
+		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
+
+		<appengine.version>1.9.63</appengine.version>
+
+		<gae.appId>cf-sandbox-dsyer</gae.appId>
+		<gae.version>5</gae.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -101,6 +112,7 @@
 			<version>${appengine.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
@@ -122,28 +134,15 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<start-class>demo.Application</start-class>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
-		<appengine.version>1.9.63</appengine.version>
-	</properties>
-
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<configuration>
-						<skip>true</skip>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<packagingExcludes>WEB-INF/lib/websocket-*.jar</packagingExcludes>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -153,11 +152,14 @@
 				<artifactId>appengine-maven-plugin</artifactId>
 				<version>${appengine.version}</version>
 				<configuration>
-					<port>8181</port>
+					<appId>${gae.appId}</appId>
 					<version>${gae.version}</version>
+					<enableJarClasses>true</enableJarClasses>
+					<port>8181</port>
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<configuration>
 					<goals>appengine:update</goals>
