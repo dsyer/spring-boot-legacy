@@ -16,21 +16,35 @@
 
 package demo;
 
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.system.DiskSpaceHealthIndicatorAutoConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "demo.hello")
 @RestController
+@EnableAutoConfiguration(exclude = {
+		DiskSpaceHealthIndicatorAutoConfiguration.class,
+		SecurityAutoConfiguration.class
+})
 public class Application extends SpringBootServletInitializer {
+
+	private static final java.util.logging.Logger logger = Logger.getLogger(Application.class.getCanonicalName());
 
 	@Autowired
 	private ServletContext context;
@@ -40,6 +54,28 @@ public class Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
+	}
+
+	@Bean
+	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+		return args -> {
+
+			String[] beanNames = ctx.getBeanDefinitionNames();
+			Arrays.sort(beanNames);
+
+			StringBuilder beans = new StringBuilder();
+
+			beans.append("Spring Boot Beans: ");
+
+			for (String beanName : beanNames) {
+				beans.append(beanName);
+				beans.append(System.lineSeparator());
+			}
+
+			if(logger.isLoggable(Level.SEVERE)) {
+				logger.fine(beans.toString());
+			}
+		};
 	}
 
 	@RequestMapping("/")

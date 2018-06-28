@@ -27,6 +27,7 @@ public class Greeting {
 
 	@JsonCreator
 	public Greeting(@JsonProperty("id") long id, @JsonProperty("content") String content) {
+
 		this.id = id;
 		this.content = content;
 	}
