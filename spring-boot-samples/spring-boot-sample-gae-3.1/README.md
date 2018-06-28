@@ -1,6 +1,6 @@
 Simple Spring Boot app that runs on Google AppEngine. No attempt has been made to use the Google APIs - just a minimal Spring app that works.
 
-Google App Engine Java 8 Runtime with Serlvet 3.1 does NOT require [spring-boot-legacy](https://github.com/scratches/spring-boot-legacy)!
+Google App Engine Java 8 Runtime with Servlet 3.1 does NOT require [spring-boot-legacy](https://github.com/scratches/spring-boot-legacy)!
 
 To Test Locally:
 ```

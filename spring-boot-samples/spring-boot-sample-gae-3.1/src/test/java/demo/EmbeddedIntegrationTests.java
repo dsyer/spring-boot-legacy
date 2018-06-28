@@ -41,12 +41,15 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = Application.class)
 public class EmbeddedIntegrationTests {
 
 	private static final Log logger = LogFactory.getLog(EmbeddedIntegrationTests.class);
+
+	private static final boolean TEST_WITH_SECURITY = false;
 
 	@Value("${info.version}")
 	private String expectedVersion;
@@ -59,19 +62,22 @@ public class EmbeddedIntegrationTests {
 	@Autowired
 	private TestRestTemplate restTemplate;
 
-	@Autowired
+	@Autowired(required = false)
 	private InMemoryUserDetailsManager userDetailsManager;
 
 	private String username = "user";
 
 	@Before
 	public void setup() {
-		// Get password from userDetailsManager, currently this is hardcoded in application.properties but
-		// this is especially important when it is set to be automatically generated.
-		UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
-		password = userDetails.getPassword().replace("{noop}", "");
-		BasicAuthorizationInterceptor bai = new BasicAuthorizationInterceptor(username, password);
-		restTemplate.getRestTemplate().getInterceptors().add(bai);
+
+		if(TEST_WITH_SECURITY) {
+			// Get password from userDetailsManager, currently this is hardcoded in application.properties but
+			// this is especially important when it is set to be automatically generated.
+			UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
+			password = userDetails.getPassword().replace("{noop}", "");
+			BasicAuthorizationInterceptor bai = new BasicAuthorizationInterceptor(username, password);
+			restTemplate.getRestTemplate().getInterceptors().add(bai);
+		}
 	}
 
 	@Test
