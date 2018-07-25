@@ -77,9 +77,9 @@
 	</licenses>
 
 	<scm>
-		<url>http://github.com/dsyer/spring-boot-jersey</url>
-		<connection>scm:git:git://github.com/scratches/spring-boot-legacy.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/scratches/spring-boot-legacy.git</developerConnection>
+		<url>http://github.com/dsyer/spring-boot-legacy</url>
+		<connection>scm:git:git://github.com/dsyer/spring-boot-legacy.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/dsyer/spring-boot-legacy.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
