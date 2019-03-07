@@ -49,7 +49,7 @@ public class EmbeddedIntegrationTests {
 
 	private static final Log logger = LogFactory.getLog(EmbeddedIntegrationTests.class);
 
-	private static final boolean TEST_WITH_SECURITY = false;
+	private static final boolean TEST_WITH_SECURITY = true;
 
 	@Value("${info.version}")
 	private String expectedVersion;
