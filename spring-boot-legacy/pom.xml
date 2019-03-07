@@ -12,7 +12,7 @@
 
 	<groupId>org.springframework.boot</groupId>
 	<artifactId>spring-boot-legacy</artifactId>
-	<version>2.0.1.BUILD-SNAPSHOT</version>
+	<version>2.1.0.BUILD-SNAPSHOT</version>
 
 	<name>Spring Boot Legacy</name>
 	<description>Spring Boot web.xml support</description>
