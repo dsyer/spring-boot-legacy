@@ -39,8 +39,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.context.support.StandardServletEnvironment;
 
 /**
@@ -112,7 +112,7 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 			builder.initializers(new ParentContextApplicationContextInitializer(parent));
 		}
 
-		builder.initializers((ApplicationContextInitializer<GenericWebApplicationContext>) applicationContext -> applicationContext.setServletContext(servletContext));
+		builder.initializers((ApplicationContextInitializer<ConfigurableWebApplicationContext>) applicationContext -> applicationContext.setServletContext(servletContext));
 
 		// Ensure error pages are registered
 		if (this.registerErrorPageFilter) {
