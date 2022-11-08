@@ -15,15 +15,14 @@
  */
 package org.springframework.boot.legacy.context.web;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Collections;
 
 import javax.servlet.ServletContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextLoader;
 

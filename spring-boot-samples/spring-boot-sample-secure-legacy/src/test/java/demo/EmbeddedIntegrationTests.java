@@ -16,15 +16,13 @@
 
 package demo;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,9 +33,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = Application.class)
 public class EmbeddedIntegrationTests {
@@ -66,8 +62,8 @@ public class EmbeddedIntegrationTests {
 	public void testSecureRedirectToLoginPage() {
 		ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://127.0.0.1:" + port + "/", String.class);
 		String body = responseEntity.getBody();
-		assertEquals("Wrong body: " + body, HttpStatus.FOUND, responseEntity.getStatusCode());
-		assertEquals("Not Login Page", "http://127.0.0.1:" + port + "/login", responseEntity.getHeaders().get("Location").get(0));
+		assertEquals(HttpStatus.FOUND, responseEntity.getStatusCode(), "Wrong body: " + body);
+		assertEquals("http://127.0.0.1:" + port + "/login", responseEntity.getHeaders().get("Location").get(0), "Not Login Page");
 	}
 
 	@Test
@@ -86,7 +82,7 @@ public class EmbeddedIntegrationTests {
 
 		String body = responseEntity.getBody();
 		logger.info("found / = " + body);
-		assertTrue("Wrong body: " + body, body.contains(expectedMessage));
+		assertTrue(body.contains(expectedMessage), "Wrong body: " + body);
 	}
 
 	@Test
@@ -105,6 +101,6 @@ public class EmbeddedIntegrationTests {
 		String body = responseEntity.getBody();
 
 		logger.info("found version = " + body);
-		assertTrue("Wrong body: " + body, body.contains(expectedVersion));
+		assertTrue(body.contains(expectedVersion), "Wrong body: " + body);
 	}
 }

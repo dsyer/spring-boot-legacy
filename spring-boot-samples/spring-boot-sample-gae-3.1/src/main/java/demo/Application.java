@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.actuate.autoconfigure.system.DiskSpaceHealthIndicatorAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -38,10 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-@EnableAutoConfiguration(exclude = {
-		DiskSpaceHealthIndicatorAutoConfiguration.class,
-		SecurityAutoConfiguration.class
-})
+@EnableAutoConfiguration
 public class Application extends SpringBootServletInitializer {
 
 	private static final java.util.logging.Logger logger = Logger.getLogger(Application.class.getCanonicalName());

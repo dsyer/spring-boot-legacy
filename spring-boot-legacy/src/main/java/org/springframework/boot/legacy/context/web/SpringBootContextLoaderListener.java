@@ -23,7 +23,7 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.ParentContextApplicationContextInitializer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -102,7 +102,7 @@ public class SpringBootContextLoaderListener extends ContextLoaderListener {
 
 		@SuppressWarnings("unchecked")
 		Class<? extends ConfigurableApplicationContext> contextClass = (Class<? extends ConfigurableApplicationContext>) determineContextClass(servletContext);
-		builder.contextClass(contextClass);
+		builder.contextFactory((type) ->  (ConfigurableApplicationContext) BeanUtils.instantiateClass(contextClass));
 
 		ApplicationContext parent = getExistingRootWebApplicationContext(servletContext);
 

@@ -16,33 +16,26 @@
 
 package demo;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import demo.hello.Greeting;
-import demo.hello.HelloWorldController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.MetricsEndpoint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+
+import demo.hello.Greeting;
+import demo.hello.HelloWorldController;
 
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = Application.class)
 public class EmbeddedIntegrationTests {
@@ -67,7 +60,7 @@ public class EmbeddedIntegrationTests {
 
 	private String username = "user";
 
-	@Before
+	@BeforeEach
 	public void setup() {
 
 		if(TEST_WITH_SECURITY) {
@@ -75,7 +68,7 @@ public class EmbeddedIntegrationTests {
 			// this is especially important when it is set to be automatically generated.
 			UserDetails userDetails = userDetailsManager.loadUserByUsername(username);
 			password = userDetails.getPassword().replace("{noop}", "");
-			BasicAuthorizationInterceptor bai = new BasicAuthorizationInterceptor(username, password);
+			BasicAuthenticationInterceptor bai = new BasicAuthenticationInterceptor(username, password);
 			restTemplate.getRestTemplate().getInterceptors().add(bai);
 		}
 	}
@@ -99,15 +92,15 @@ public class EmbeddedIntegrationTests {
 			logger.debug("greeting = " + greeting);
 
 			// Hit endpoint and check counter.
-			assertThat(greeting, is(not(nullValue())));
-			assertThat(greeting.getContent(), is("Hello, Stranger!"));
+			assertThat(greeting).isNotNull();
+			assertThat(greeting.getContent()).isEqualTo("Hello, Stranger!");
 			// Check our own internal counter, this is just a sanity check
-			assertThat(greeting.getId(), is(expectedValue));
+			assertThat(greeting.getId()).isEqualTo(expectedValue);
 
 			// Verify metrics are being updated.
 			MetricsEndpoint.MetricResponse response = restTemplate.getForObject("http://127.0.0.1:" + port + "/actuator/metrics/" + HelloWorldController.HELLO_WORLD_COUNTER, MetricsEndpoint.MetricResponse.class);
 			MetricsEndpoint.Sample sample = response.getMeasurements().get(0);
-			assertThat((sample.getValue()), is((double) expectedValue));
+			assertThat(sample.getValue()).isEqualTo((double) expectedValue);
 		}
 
 		String response = restTemplate.getForObject("http://127.0.0.1:" + port + "/actuator/metrics/http.server.requests", String.class);
@@ -120,6 +113,6 @@ public class EmbeddedIntegrationTests {
 		//mvc.perform(get("/"))
 		String body = restTemplate.getForObject("http://127.0.0.1:" + port + "/version", String.class);
 		logger.debug("found version = " + body);
-		assertTrue("Wrong body: " + body, body.contains(expectedVersion));
+		assertThat(body).contains(expectedVersion);
 	}
 }
